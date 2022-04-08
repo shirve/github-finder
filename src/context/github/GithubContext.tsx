@@ -5,7 +5,8 @@ import githubReducer from './GithubReducer'
 interface IGithubContext {
   users: UserViewModel[]
   loading: boolean
-  fetchUsers: () => void
+  searchUsers: (text: string) => void
+  clearUsers: () => void
 }
 
 const GITHUB_URL = 'https://api.github.com'
@@ -20,13 +21,22 @@ export const GithubProvider = ({ children }: { children: ReactNode }) => {
 
   const [state, dispatch] = useReducer(githubReducer, initialState)
 
-  const fetchUsers = async () => {
+  const searchUsers = async (text: string) => {
     setLoading()
-    const res = await fetch(`${GITHUB_URL}/users`)
-    const data = await res.json()
+    const params = new URLSearchParams({
+      q: text,
+    })
+    const res = await fetch(`${GITHUB_URL}/search/users?${params}`)
+    const { items } = await res.json()
     dispatch({
       type: 'GET_USERS',
-      payload: data,
+      payload: items,
+    })
+  }
+
+  const clearUsers = () => {
+    dispatch({
+      type: 'CLEAR_USERS',
     })
   }
 
@@ -38,7 +48,12 @@ export const GithubProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <GithubContext.Provider
-      value={{ users: state.users, loading: state.loading, fetchUsers }}
+      value={{
+        users: state.users,
+        loading: state.loading,
+        searchUsers,
+        clearUsers,
+      }}
     >
       {children}
     </GithubContext.Provider>

@@ -7,6 +7,7 @@ const initialState: { users: UserViewModel[]; loading: boolean } = {
 
 type ACTIONTYPE =
   | { type: 'GET_USERS'; payload: UserViewModel[] }
+  | { type: 'CLEAR_USERS' }
   | { type: 'SET_LOADING' }
 
 const githubReducer = (state: typeof initialState, action: ACTIONTYPE) => {
@@ -17,6 +18,8 @@ const githubReducer = (state: typeof initialState, action: ACTIONTYPE) => {
         users: action.payload,
         loading: false,
       }
+    case 'CLEAR_USERS':
+      return initialState
     case 'SET_LOADING':
       return {
         ...state,
