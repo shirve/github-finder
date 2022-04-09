@@ -1,10 +1,12 @@
 import { useState, useContext } from 'react'
+import AlertContext from '../../context/alert/AlertContext'
 import GithubContext from '../../context/github/GithubContext'
 
 const UserSearch = () => {
   const [text, setText] = useState<string>('')
 
   const { users, searchUsers, clearUsers } = useContext(GithubContext)
+  const { setAlert } = useContext(AlertContext)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setText(e.target.value)
@@ -13,7 +15,7 @@ const UserSearch = () => {
   const handleSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault()
     if (text === '') {
-      alert('Input field is empty')
+      setAlert('Input field is empty', 'error')
     } else {
       searchUsers(text)
       setText('')
