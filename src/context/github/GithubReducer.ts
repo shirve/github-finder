@@ -1,12 +1,22 @@
+import { RepoViewModel } from '../../models/Repo'
 import { UserViewModel } from '../../models/User'
 
-const initialState: { users: UserViewModel[]; loading: boolean } = {
+const initialState: {
+  users: UserViewModel[]
+  user: UserViewModel
+  repos: RepoViewModel[]
+  loading: boolean
+} = {
   users: [],
+  user: {} as UserViewModel,
+  repos: [],
   loading: false,
 }
 
 type ACTIONTYPE =
   | { type: 'GET_USERS'; payload: UserViewModel[] }
+  | { type: 'GET_USER'; payload: UserViewModel }
+  | { type: 'GET_USER_REPOS'; payload: RepoViewModel[] }
   | { type: 'CLEAR_USERS' }
   | { type: 'SET_LOADING' }
 
@@ -16,6 +26,18 @@ const githubReducer = (state: typeof initialState, action: ACTIONTYPE) => {
       return {
         ...state,
         users: action.payload,
+        loading: false,
+      }
+    case 'GET_USER':
+      return {
+        ...state,
+        user: action.payload,
+        loading: false,
+      }
+    case 'GET_USER_REPOS':
+      return {
+        ...state,
+        repos: action.payload,
         loading: false,
       }
     case 'CLEAR_USERS':
